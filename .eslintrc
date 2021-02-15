@@ -20,8 +20,8 @@
     "nonblock-statement-body-position":"off",
     "quotes":"off",
     "arrow-parens":"off",
-    "linebreak-style": "off"
-
+    "linebreak-style": "off",
+    "no-useless-escape": "off"
   },
   "extends": "airbnb-base"
 }

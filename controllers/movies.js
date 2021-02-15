@@ -2,9 +2,6 @@ const Movie = require('../models/movie')
 const ErrorHandler = require('../middlewares/errorsHandler')
 
 const getMovies = (req, res, next) => {
-  // const movieList = Movie.find({})
-  // console.log(movieList)
-  // Movie.filter(item => item.owner === req.user._id)
   Movie.find({ owner: req.user._id })
     .sort('-createdAt')
     .then((movies) => {

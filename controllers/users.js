@@ -14,11 +14,9 @@ const createUser = (req, res, next) => {
     }))
     .then((users) => {
       res.send({
-        data: {
-          name: users.name,
-          _id: users._id,
-          email: users.email,
-        },
+        name: users.name,
+        _id: users._id,
+        email: users.email,
       })
     })
     .catch((err) => {
@@ -40,9 +38,9 @@ const login = (req, res, next) => {
         maxAge: 60 * 60 * 24 * 7 * 1000,
         httpOnly: false,
         path: '/',
-        // domain: 'popvaleks.students.nomoreparties.xyz',
-        // secure: true,
-        domain: '',
+        domain: 'popvaleks.students.nomoreparties.xyz',
+        secure: true,
+        // domain: '', // localhost only
         credentials: 'include',
       })
         .send({ message: 'Вы успешно авторизаровались' }) // Возвращает JWT?
@@ -82,61 +80,32 @@ const getUserMe = (req, res, next) => {
 const updateUserInfo = (req, res, next) => {
   const _id = getId(req)
   const { name, email } = req.body
-  if (req.body.name === undefined) {
-    return User.findOneAndUpdate({ _id }, { email },
-      { new: true, runValidators: true })
-      .orFail(() => {
-        throw new ErrorHandler('Пользователь не найден', 404)
-      })
-      .then((user) => {
-        res.send({
-          name: user.name,
-          email: user.email,
-        })
-      })
-      .catch((err) => {
-        if (err.kind === "ObjectId") {
-          return next(new ErrorHandler('Не валидный id', 400))
-        }
-        next(err)
-      })
-  } else if (email === undefined) {
-    return User.findOneAndUpdate({ _id }, { name },
-      { new: true, runValidators: true })
-      .orFail(() => {
-        throw new ErrorHandler('Пользователь не найден', 404)
-      })
-      .then((user) => {
-        res.send({
-          name: user.name,
-          email: user.email,
-        })
-      })
-      .catch((err) => {
-        if (err.kind === "ObjectId") {
-          return next(new ErrorHandler('Не валидный id', 400))
-        }
-        next(err)
-      })
-  } else {
-    return User.findOneAndUpdate({ _id }, { name, email },
-      { new: true, runValidators: true })
-      .orFail(() => {
-        throw new ErrorHandler('Пользователь не найден', 404)
-      })
-      .then((user) => {
-        res.send({
-          name: user.name,
-          email: user.email,
-        })
-      })
-      .catch((err) => {
-        if (err.kind === "ObjectId") {
-          return next(new ErrorHandler('Не валидный id', 400))
-        }
-        next(err)
-      })
-  }
+  User.find({ email })
+    .then((user) => {
+      if (user.length >= 1) {
+        return next(new ErrorHandler('Пользователь с таким Email уже зарегестрирован', 409))
+      } else {
+        User.findOneAndUpdate({ _id }, { name, email },
+          { new: true, runValidators: true, omitUndefined: true })
+          // все сценарии отрабатываются при логине, проверка ошибок под вопросом
+          .orFail(() => {
+            throw new ErrorHandler('Пользователь не найден', 404)
+          })
+          .then((user) => {
+            res.send({
+              name: user.name,
+              email: user.email,
+            })
+          })
+          .catch((err) => {
+            if (err.kind === "ObjectId") {
+              return next(new ErrorHandler('Не валидный id', 400))
+            }
+            next(err)
+          })
+      }
+    })
+    .catch(next)
 }
 
 module.exports = {

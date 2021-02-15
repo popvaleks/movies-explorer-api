@@ -1,10 +1,11 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+const rateLimit = require('express-rate-limit')
+const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const { celebrate, Joi, errors } = require('celebrate')
 const cors = require('cors')
-const rateLimit = require('express-rate-limit')
 
 const usersRouter = require('./routes/users')
 const { login, createUser, logout } = require('./controllers/users')
@@ -12,7 +13,6 @@ const movieRouter = require('./routes/movie')
 const errorRouter = require('./routes/errorPage')
 const auth = require('./middlewares/auth')
 const { requestLogger, errorLogger } = require('./middlewares/logger')
-// const linkRegExp = require('./helpers/regExp')
 
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env
@@ -30,8 +30,8 @@ const limiter = rateLimit({
   max: 100, // можно совершить максимум 100 запросов с одного IP
 })
 
-// подключаем rate-limiter
 app.use(limiter)
+app.use(helmet())
 app.use(bodyParser.urlencoded({ extended: true })) // для приёма веб-страниц внутри POST-запроса
 app.use(bodyParser.json()) // для собирания JSON-формата
 

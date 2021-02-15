@@ -61,7 +61,6 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: v => {
-        // return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
         return new RegExp(linkRegExp).test(v)
       },
       message: 'Не корректная ссылка',
@@ -72,14 +71,15 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: v => {
-        // return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
         return new RegExp(linkRegExp).test(v)
       },
       message: 'Не корректная ссылка',
     },
   },
-  "movieId ": {
+  "movieId": { // валидируется при помощи celebrate
     type: String,
+    // unique: true,
+    required: true,
   },
   "owner": {
     type: Types.ObjectId,

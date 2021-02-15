@@ -20,6 +20,7 @@ router.post('/movies', celebrate({
     image: Joi.string().required().pattern(new RegExp(linkRegExp)),
     trailer: Joi.string().required().pattern(new RegExp(linkRegExp)),
     thumbnail: Joi.string().required().pattern(new RegExp(linkRegExp)),
+    movieId: Joi.string().hex().required(),
   }),
 }), postMovies)
 router.delete('/movies/:_id', validateId, deleteMovies)
