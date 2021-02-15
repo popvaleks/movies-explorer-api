@@ -54,9 +54,9 @@ const logout = (req, res, next) => {
       maxAge: 0,
       httpOnly: false,
       path: '/',
-      // domain: 'popvaleks.students.nomoreparties.xyz',
-      // secure: true,
-      domain: '',
+      domain: 'popvaleks.students.nomoreparties.xyz',
+      secure: true,
+      // domain: '',
       credentials: 'include',
     })
       .send({ message: 'Куки удалены' })
