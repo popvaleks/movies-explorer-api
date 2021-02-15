@@ -1,0 +1,27 @@
+{
+  "rules": {
+    "no-underscore-dangle": "off",
+    "semi": ["error", "never"],
+    "import/no-extraneous-dependencies": "off",
+    "eslint quotes": "off",
+    "import/newline-after-import": "off",
+    "consistent-return": "off",
+    "no-console":"off",
+    "eol-last":"off",
+    "arrow-body-style":"off",
+    "no-shadow":"off",
+    "object-shorthand":"off",
+    "camelcase":"off",
+    "quote-props":"off",
+    "no-else-return": "off",
+    "func-names":"off",
+    "prefer-destructuring": "off",
+    "curly":"off",
+    "nonblock-statement-body-position":"off",
+    "quotes":"off",
+    "arrow-parens":"off",
+    "linebreak-style": "off"
+
+  },
+  "extends": "airbnb-base"
+}
