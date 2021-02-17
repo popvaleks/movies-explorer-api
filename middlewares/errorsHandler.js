@@ -1,8 +1,18 @@
-class ErrorHandler extends Error {
-  constructor(message, err) {
-    super(message)
-    this.statusCode = err
-  }
-}
+const { apiError } = require('../utils/constantsErrorMsg');
 
-module.exports = ErrorHandler
+const ErrorHandler = (err, req, res, next) => {
+  // если у ошибки нет статуса, выставляем 500
+  const { statusCode = 500, message } = err;
+
+  res
+    .status(statusCode)
+    .send({
+      // проверяем статус и выставляем сообщение в зависимости от него
+      message: statusCode === 500
+        ? apiError
+        : message,
+    });
+  next();
+};
+
+module.exports = ErrorHandler;

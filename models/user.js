@@ -1,15 +1,20 @@
-const mongoose = require('mongoose')
-const validator = require('validator')
-const bcrypt = require('bcryptjs')
-const ErrorHandler = require('../middlewares/errorsHandler')
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
+
+const BadRequestError = require('../error/BadRequestError');
+const {
+  notValidEmail,
+  wrongLoginData,
+} = require('../utils/constantsErrorMsg');
 
 const userSchema = new mongoose.Schema({
-  "name": {
+  name: {
     type: String,
     minlength: 2,
     maxlength: 30,
   },
-  "email": {
+  email: {
     type: String,
     minlength: 2,
     maxlength: 254,
@@ -17,35 +22,35 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate(value) {
       if (!validator.isEmail(value)) {
-        throw new ErrorHandler('Invalid Email Address', 400)
+        throw new BadRequestError(notValidEmail);
       }
     },
   },
-  "password": {
+  password: {
     type: String,
     required: true,
     select: false,
   },
-})
+});
 
-userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function hashPassword(email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new ErrorHandler('Не верный Email или пароль', 400)
+        throw new BadRequestError(wrongLoginData);
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new ErrorHandler('Не верный Email или пароль', 400)
+            throw new BadRequestError(wrongLoginData);
           }
 
-          return user
-        })
-    })
-}
+          return user;
+        });
+    });
+};
 
-const userModel = mongoose.model('user', userSchema)
+const userModel = mongoose.model('user', userSchema);
 
-module.exports = userModel
+module.exports = userModel;

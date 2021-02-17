@@ -1,21 +1,23 @@
-const jwt = require('jsonwebtoken')
-const { NODE_ENV, JWT_SECRET } = process.env
-const { getCookie } = require('../helpers/getCookie')
-const ErrorHandler = require('./errorsHandler')
+const jwt = require('jsonwebtoken');
+
+const { JWT_SECRET } = require('../config');
+const { getCookie } = require('../helpers/getCookie');
+const UnauthorizedError = require('../error/UnauthorizedError');
+const { unauthorizedMsg } = require('../utils/constantsErrorMsg');
 
 module.exports = (req, res, next) => {
-  const token = getCookie('jwt', req)
+  const token = getCookie('jwt', req);
 
   if (!token) {
-    return next(new ErrorHandler('Данный контент доступен только авторизиованным пользхователям', 401))
+    return next(new UnauthorizedError(unauthorizedMsg));
   }
-  let payload
+  let payload;
 
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'world-secret')
+    payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    next(new ErrorHandler('Данный контент доступен только авторизиованным пользхователям', 401))
+    next(new UnauthorizedError(unauthorizedMsg));
   }
-  req.user = payload // записываем пейлоуд в объект запроса
-  next() // пропускаем запрос дальше
-}
+  req.user = payload; // записываем пейлоуд в объект запроса
+  return next(); // пропускаем запрос дальше
+};

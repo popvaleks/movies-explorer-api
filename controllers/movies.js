@@ -1,65 +1,73 @@
-const Movie = require('../models/movie')
-const ErrorHandler = require('../middlewares/errorsHandler')
+const Movie = require('../models/movie');
+const NotFoundError = require('../error/NotFoundError');
+const BadRequestError = require('../error/BadRequestError');
+const ForbiddenError = require('../error/ForbiddenError');
+const {
+  uncorrectData,
+  filmNotFound,
+  forbiddenErrorMsg,
+  noValidateId,
+  filmListNotFound,
+} = require('../utils/constantsErrorMsg');
+const {
+  removeMovie,
+} = require('../utils/constantsMsg');
 
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
     .sort('-createdAt')
     .then((movies) => {
       if (!movies) {
-        return next(new ErrorHandler('Список фильмов отсутствует', 404))
+        return next(new NotFoundError(filmListNotFound));
       }
       if (movies.length === 0) {
-        return next(new ErrorHandler('Фильмотека не найдена', 404))
+        return next(new NotFoundError(filmListNotFound));
       }
-      res.send(movies)
+      return res.send(movies);
     })
-    .catch(next)
-}
+    .catch(next);
+};
 
-const postMovies = (req, res, next) => {
-  return Movie.countDocuments()
-    .then(count => {
-      return Movie.create({ id: count, owner: req.user._id, ...req.body })
-        .then((movie) => {
-          if (!movie) {
-            return next(new ErrorHandler('Ошибка при передаче данных', 400))
-          }
-          res.send(movie)
-        })
-        .catch(err => {
-          if (err.name === 'ValidationError') {
-            return next(new ErrorHandler('Переданы не корректные данные', 400))
-          }
-          next(err)
-        })
+const postMovies = (req, res, next) => Movie.countDocuments()
+  .then((count) => Movie.create({ id: count, owner: req.user._id, ...req.body })
+    .then((movie) => {
+      if (!movie) {
+        return next(new BadRequestError(uncorrectData));
+      }
+      return res.send(movie);
     })
-    .catch(next)
-}
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return next(new BadRequestError(uncorrectData));
+      }
+      return next(err);
+    }))
+  .catch(next);
 
 const deleteMovies = (req, res, next) => {
-  const { _id } = req.params
+  const { _id } = req.params;
   Movie.findOne({ _id })
     .orFail(() => {
-      throw new ErrorHandler('Фильм отсутвует в списке', 404)
+      throw new NotFoundError(filmNotFound);
     })
     .then((movies) => {
       if (movies.owner.toString() === req.user._id) {
         movies.remove()
-          .then((removeMovie) => res.send({ message: `Фильм «${removeMovie.nameRU}» успешно удален` }))
+          .then(() => res.send({ message: removeMovie }));
       } else {
-        throw new ErrorHandler('Вы не можете удалить фильм сохраненный другим пользователем', 401)
+        throw new ForbiddenError(forbiddenErrorMsg);
       }
     })
-    .catch(err => {
-      if (err.kind === "ObjectId") {
-        return next(new ErrorHandler('Не валидный id', 400))
+    .catch((err) => {
+      if (err.kind === 'ObjectId') {
+        return next(new BadRequestError(noValidateId));
       }
-      next(err)
-    })
-}
+      return next(err);
+    });
+};
 
 module.exports = {
   getMovies,
   postMovies,
   deleteMovies,
-}
+};

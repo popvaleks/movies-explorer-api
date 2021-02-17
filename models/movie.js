@@ -1,91 +1,97 @@
-const mongoose = require('mongoose')
-const { Types } = require('mongoose')
-const { linkRegExp } = require('../helpers/regExp')
+const mongoose = require('mongoose');
+const { Types } = require('mongoose');
+const validator = require('validator');
+
+const BadRequestError = require('../error/BadRequestError');
+const {
+  uncorrectUrlImg,
+  uncorrectUrlTrailer,
+  uncorrectUrlThumbnail,
+} = require('../utils/constantsErrorMsg');
 
 const movieSchema = new mongoose.Schema({
-  "nameRU": {
+  nameRU: {
     type: String,
     minlength: 2,
     maxlength: 30,
     required: true,
   },
-  "nameEN": {
+  nameEN: {
     type: String,
     minlength: 2,
     maxlength: 30,
     required: true,
   },
-  "country": {
+  country: {
     type: String,
     minlength: 2,
     maxlength: 30,
     required: true,
   },
-  "director": {
+  director: {
     type: String,
     minlength: 2,
     maxlength: 30,
     required: true,
   },
-  "duration": {
+  duration: {
     type: Number,
     minlength: 2,
     maxlength: 30,
     required: true,
   },
-  "year": {
+  year: {
     type: String,
     minlength: 4,
     maxlength: 32,
     required: true,
   },
-  "description": {
+  description: {
     type: String,
     minlength: 2,
     maxlength: 200,
     required: true,
   },
-  "image": {
+  image: {
     type: String,
     required: true,
-    validate: {
-      validator: v => {
-        // return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
-        return new RegExp(linkRegExp).test(v)
-      },
-      message: 'Не корректная ссылка', // err.name === 'ValidationError'
+    validate(value) {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      throw new BadRequestError(uncorrectUrlImg);
     },
   },
-  "trailer": {
+  trailer: {
     type: String,
     required: true,
-    validate: {
-      validator: v => {
-        return new RegExp(linkRegExp).test(v)
-      },
-      message: 'Не корректная ссылка',
+    validate(value) {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      throw new BadRequestError(uncorrectUrlTrailer);
     },
   },
-  "thumbnail": {
+  thumbnail: {
     type: String,
     required: true,
-    validate: {
-      validator: v => {
-        return new RegExp(linkRegExp).test(v)
-      },
-      message: 'Не корректная ссылка',
+    validate(value) {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      throw new BadRequestError(uncorrectUrlThumbnail);
     },
   },
-  "movieId": { // валидируется при помощи celebrate
-    type: String,
+  movieId: {
+    type: Number,
     // unique: true,
     required: true,
   },
-  "owner": {
+  owner: {
     type: Types.ObjectId,
   },
-})
+});
 
-const movieModel = mongoose.model('movie', movieSchema)
+const movieModel = mongoose.model('movie', movieSchema);
 
-module.exports = movieModel
+module.exports = movieModel;

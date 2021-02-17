@@ -1,15 +1,18 @@
-const ErrorHandler = require('../middlewares/errorsHandler')
+const NotFoundError = require('../error/NotFoundError');
+const { cookieNotFound } = require('../utils/constantsErrorMsg');
 
 module.exports = {
-  getCookie: function (cookie_name, req, next) {
-    if (req.headers.cookie) {
-      const results = req.headers.cookie.match(`(^|;) ?${cookie_name}=([^;]*)(;|$)`)
-      if (results) {
-        return (unescape(results[2]))
-      } else
-        return next(new ErrorHandler('Искомый куки не найден', 404))
-    } else {
-      return null
+  getCookie(cookieName, req, next) {
+    try {
+      if (req.headers.cookie) {
+        const results = req.headers.cookie.match(`(^|;) ?${cookieName}=([^;]*)(;|$)`);
+        if (results) {
+          return (unescape(results[2]));
+        } return next(new NotFoundError(cookieNotFound));
+      }
+      return null;
+    } catch (err) {
+      return next(err);
     }
   },
-}
+};

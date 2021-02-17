@@ -1,15 +1,14 @@
-const jwt = require('jsonwebtoken')
-const { NODE_ENV, JWT_SECRET } = process.env
-const { getCookie } = require('./getCookie')
+const jwt = require('jsonwebtoken');
+
+const { JWT_SECRET } = require('../config');
+const { getCookie } = require('./getCookie');
 
 module.exports = {
-  getId: function (req) {
-    const token = getCookie('jwt', req)
-    const decoded = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'world-secret')
-    const _id = decoded._id
-    if (_id)
-      return (_id)
-    else
-      return null
+  getId(req) {
+    const token = getCookie('jwt', req);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const { _id } = decoded;
+    if (_id) { return (_id); }
+    return null;
   },
-}
+};
