@@ -58,6 +58,21 @@ const validateUserCreate = celebrate({
   }),
 });
 
+const validateUserLogin = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email()
+      .message(notValidEmail)
+      .messages({
+        'any.required': emptyEmail,
+      }),
+    password: Joi.string().required().min(8)
+      .messages({
+        'string-min': lowPass,
+        'any.required': emptyPass,
+      }),
+  }),
+});
+
 const validateMoviesCreate = celebrate({
   body: Joi.object().keys({
     nameRU: Joi.string().required().min(2).max(30)
@@ -160,4 +175,5 @@ module.exports = {
   validateUserPatch,
   validateId,
   validateMoviesCreate,
+  validateUserLogin,
 };
