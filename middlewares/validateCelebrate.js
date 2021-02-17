@@ -32,6 +32,9 @@ const {
   emptyTrailer,
   uncorrectThumbnail,
   oneOfInput,
+  emptyThumbnail,
+  empryMovieId,
+  emptyImg,
 } = require('../utils/constantsErrorMsg');
 
 const validateUserCreate = celebrate({
@@ -46,7 +49,7 @@ const validateUserCreate = celebrate({
         'string-min': lowPass,
         'any.required': emptyPass,
       }),
-    name: Joi.string().min(2).max(30)
+    name: Joi.string().required().min(2).max(30)
       .messages({
         'string-min': lowName,
         'string-max': maxName,
@@ -106,7 +109,7 @@ const validateMoviesCreate = celebrate({
       return helpers.message(uncorrectLink);
     })
       .messages({
-        'any.required': 'Заполните поле - image',
+        'any.required': emptyImg,
       }),
     trailer: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
@@ -124,11 +127,11 @@ const validateMoviesCreate = celebrate({
       return helpers.message(uncorrectThumbnail);
     })
       .messages({
-        'any.required': 'Заполните поле - thumbnail',
+        'any.required': emptyThumbnail,
       }),
     movieId: Joi.number().required()
       .messages({
-        'any.required': 'Заполните поле - movieId',
+        'any.required': empryMovieId,
       }),
   }),
 });
@@ -136,7 +139,7 @@ const validateMoviesCreate = celebrate({
 const validateUserPatch = celebrate({
   body: Joi.object().keys({
     email: Joi.string().email()
-      .message('Не валидный Email'),
+      .message(notValidEmail),
     name: Joi.string().min(2).max(30)
       .messages({
         'string-min': lowName,

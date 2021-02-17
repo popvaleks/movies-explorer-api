@@ -1,12 +1,10 @@
 // require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 
-// const { NODE_ENV, linkMongo } = process.env;
 const { linkMongo, mongoSettings } = require('./config');
 const cors = require('./middlewares/cors');
 const routes = require('./routes/index');
@@ -36,8 +34,8 @@ app.use(limiter);
 
 app.use(errors());
 app.use(ErrorHandler);
-// app.listen(PORT, () => {
-//   // Если всё работает, консоль покажет, какой порт приложение слушает
-//   console.log(`App listening on port ${PORT}`);
-// });
-app.listen(PORT);
+app.listen(PORT, () => {
+  // Если всё работает, консоль покажет, какой порт приложение слушает
+  // eslint-disable-next-line no-console
+  console.log(`App listening on port ${PORT}`);
+});

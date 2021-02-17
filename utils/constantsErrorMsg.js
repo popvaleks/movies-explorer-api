@@ -19,7 +19,7 @@ const lowPass = 'Минимальная длинна пароля 8 символ
 const emptyPass = 'Заполните поле - пароль';
 const lowName = 'Минимальная длинна Имени 2 символа';
 const maxName = 'Максимальная длинна Имени 30 символов';
-const emptyName = 'Заполните поле - NameRu';
+const emptyName = 'Заполните поле - имя';
 const lowNameEn = 'Минимальная длинна NameEn 2 символа';
 const maxNameEn = 'Максимальная длинна NameEn 30 символов';
 const emptyNameEn = 'Заполните поле - NameEn';
@@ -42,9 +42,15 @@ const uncorrectLinkImg = 'Указана некорректная ссылка �
 const uncorrectLinkTrailer = 'Указана некорректная ссылка на трейлер';
 const emptyTrailer = 'Заполните поле - trailer';
 const uncorrectThumbnail = 'Указана некорректная ссылка на миниатюру';
+const emptyThumbnail = 'Заполните поле - thumbnail';
 const oneOfInput = 'Заполните хотя бы одно поле';
+const empryMovieId = 'Заполните поле - movieId';
+const emptyImg = 'Заполните поле - image';
 
 module.exports = {
+  emptyImg,
+  empryMovieId,
+  emptyThumbnail,
   oneOfInput,
   uncorrectThumbnail,
   emptyTrailer,

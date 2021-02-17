@@ -102,10 +102,10 @@ const updateUserInfo = (req, res, next) => {
         .orFail(() => {
           throw new NotFoundError(userNotFound);
         })
-        .then(() => {
+        .then((data) => {
           res.send({
-            name: user.name,
-            email: user.email,
+            name: data.name,
+            email: data.email,
           });
         })
         .catch((err) => {
