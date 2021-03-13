@@ -51,7 +51,7 @@ const login = (req, res, next) => {
         maxAge: 60 * 60 * 24 * 7 * 1000,
         httpOnly: false,
         path: '/',
-        domain: domainCookie,
+        domain: 'popvaleks.students.nomoreparties.xyz',
         secure: secureCookie,
         credentials: 'include',
       })
