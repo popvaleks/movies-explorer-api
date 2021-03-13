@@ -47,7 +47,7 @@ const login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-      res.cookie('jwt', token, {
+      res.cookie('aaaaaa', token, {
         maxAge: 60 * 60 * 24 * 7 * 1000,
         httpOnly: false,
         path: '/',
