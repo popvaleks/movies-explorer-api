@@ -47,7 +47,7 @@ const login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-      res.cookie('aaaaaa', token, {
+      res.cookie('jwt', token, {
         maxAge: 60 * 60 * 24 * 7 * 1000,
         httpOnly: false,
         path: '/',
@@ -66,8 +66,8 @@ const logout = (req, res, next) => {
       maxAge: 0,
       httpOnly: false,
       path: '/',
-      domain: domainCookie,
-      secure: secureCookie,
+      domain: 'popvaleks.students.nomoreparties.xyz',
+      secure: true,
       credentials: 'include',
     })
       .send({ message: removieCookies });
