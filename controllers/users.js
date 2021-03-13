@@ -52,7 +52,7 @@ const login = (req, res, next) => {
         httpOnly: false,
         path: '/',
         domain: 'popvaleks.students.nomoreparties.xyz',
-        secure: secureCookie,
+        secure: true,
         credentials: 'include',
       })
         .send({ jwt: token });

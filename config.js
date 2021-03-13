@@ -6,7 +6,7 @@ const {
   domainCookie = '',
   secureCookie = false,
 } = process.env;
-const whiteList = ['https://www.popvaleks.students.nomoreparties.xyz', 'https://popvaleks.students.nomoreparties.xyz', 'http://localhost:3000'];
+const whiteList = ['https://www.popvaleks.students.nomoreparties.xyz', 'https://popvaleks.students.nomoreparties.xyz'];
 const corsSettings = {
   origin: whiteList,
   // "methods": "GET,HEAD,PUT,PATCH,POST,DELETE", // default
