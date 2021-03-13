@@ -75,25 +75,25 @@ const validateUserLogin = celebrate({
 
 const validateMoviesCreate = celebrate({
   body: Joi.object().keys({
-    nameRU: Joi.string().required().min(2).max(30)
+    nameRU: Joi.string().required().min(2).max(100)
       .messages({
         'string-min': lowName,
         'string-max': maxName,
         'any.required': emptyName,
       }),
-    nameEN: Joi.string().required().min(2).max(30)
+    nameEN: Joi.string().required().min(2).max(100)
       .messages({
         'string-min': lowNameEn,
         'string-max': maxNameEn,
         'any.required': emptyNameEn,
       }),
-    country: Joi.string().required().min(2).max(30)
+    country: Joi.string().required().min(2).max(100)
       .messages({
         'string-min': lowCountry,
         'string-max': maxCountry,
         'any.required': emptyCountry,
       }),
-    director: Joi.string().required().min(2).max(30)
+    director: Joi.string().required().min(2).max(100)
       .messages({
         'string-min': lowDirector,
         'string-max': maxDirector,
@@ -111,7 +111,7 @@ const validateMoviesCreate = celebrate({
         'string-max': maxYear,
         'any.required': emptyYear,
       }),
-    description: Joi.string().required().min(2).max(200)
+    description: Joi.string().required().min(2).max(65535)
       .messages({
         'string-min': lowDescription,
         'string-max': maxDescription,
